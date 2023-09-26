@@ -2,7 +2,7 @@ import './App.css'
 import Header from './components/Header'
 import Logo from './assets/logo.png'
 import Navbar from './components/Navbar'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import BookGrid from './components/BookGrid'
 import Overview from './components/Overview'
 import Button from './components/Button'
@@ -20,7 +20,6 @@ function App() {
 
   const updateData = () => {
     const fetchAllBooks = async () => {
-      console.log('called');
       const APIURL = 'http://localhost:3001/'
   
       try {
@@ -36,7 +35,7 @@ function App() {
     fetchAllBooks()
   }
 
-  useEffect(() => {
+useEffect(() => {
    updateData()
 }, [])
 
@@ -48,7 +47,7 @@ return (
         <p>Keep track of your Books</p>
      </Header>
      {isLibraryActive 
-     ? <BookGrid className='h-[90%] grid grid-cols-3 overflow-scroll overflow-x-hidden'>
+     ? <BookGrid className='h-[90%] grid grid-cols-4 overflow-scroll overflow-x-hidden'>
         {isModalActive 
         ? <AddModal className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-30 bg-secondary border-2 border-accent p-5 rounded-lg flex flex-col items-center' 
           isModalActive={isModalActive}  
@@ -86,7 +85,10 @@ return (
           <span className="material-symbols-outlined">add</span>
         </Button>
      </BookGrid> 
-     : <Overview className='h-[90%]'></Overview>}
+     : <Overview 
+     className='h-[90%] w-full p-2 grid grid-cols-2 grid-rows-1'
+     allBooks={allBooks}
+     />}
 
     </>
   )
