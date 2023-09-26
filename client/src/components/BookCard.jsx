@@ -1,8 +1,9 @@
+import { useState } from "react";
 import Button from "./Button";
 
-export default function BookCard({ className, book, updateData }) {
+export default function BookCard({ className, book, updateData, editModeActive, setEditModeActive, setEditBook }) {
     
-    const { _id, title, pages, author, genre, language, rating, format } = book
+    const { _id, title, pages, author, genre, language, rating, format, readStatus } = book
     
     const deleteBook = async () => {
 
@@ -25,6 +26,7 @@ export default function BookCard({ className, book, updateData }) {
 
     return ( 
         <>
+
             <div className={className} id={_id} >
                 <div className="text-center h-1/3 bg-primary w-full mb-2 rounded-t-lg pt-4">
                     <h3 className="text-2xl font-bold">{title}</h3>
@@ -36,11 +38,18 @@ export default function BookCard({ className, book, updateData }) {
                     <p className="p-2">Language: <span className="font-semibold">{language !== '' ? language : 'N/A'}</span></p>
                     <p className="p-2">Format: <span className="font-semibold">{format}</span></p>
                 </div>
-                <div className="h-1/3 flex items-center">
+                <div className="h-1/3 flex flex-col justify-center items-center">
+                    <p>Did your read it: <span className="font-semibold">{readStatus ? 'Yes' : 'No'}</span></p>
                     <p>Your Rating: <span className="font-semibold">{rating}/5</span></p>
                 </div>
                 <Button className="absolute bottom-0 right-12 hover:scale-105" onClick={() => { deleteBook() }}><span className="material-symbols-outlined">delete</span></Button>
-                <Button className="absolute bottom-0 right-3 hover:scale-105"><span className="material-symbols-outlined">edit</span></Button>
+                <Button className="absolute bottom-0 right-3 hover:scale-105" 
+                onClick={() => { 
+                    setEditModeActive(!editModeActive) 
+                    setEditBook(book)
+                    }}>
+                    <span className="material-symbols-outlined">edit</span>
+                </Button>
             </div>
         </>
     )

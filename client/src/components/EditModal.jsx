@@ -1,36 +1,39 @@
+import Button from "./Button"
 import Book from "../BookClass";
-import Button from "./Button";
 
-export default function BookModal({ className, isModalActive, setIsModalActive, updateData }) {
+export default function EditModal({ className, editModeActive, setEditModeActive, editBook, updateData }) {
 
-
-    const handleError = (state) => {
-        const errorBox = document.querySelector('.error')
-        
-        if(state === 'empty') {
-            errorBox.textContent = 'Please enter *-required Inputs'
-        }
-
-        if(state === 'NaN') {
-            errorBox.textContent = 'Please enter a correct Value'
-        }
-
-        setTimeout(() => {
-            errorBox.textContent = ''
-        }, 1500);
-    }
-
-    const clearInputs = (element) => {
-        element.value = ''
-    }
-
-    const handleSubmit = e => {
-        e.preventDefault()
-
+    const {_id, title, pages, author, language, readStatus, genre, rating, format } = editBook
+    
+    const enterInputValues = () => {
         const textInputs = document.querySelectorAll('form input[type="text"]')
         const selectInputs = document.querySelectorAll('form select')
         const haveReadInput = document.querySelector('form input[type="checkbox"]')
 
+        if(editModeActive) {
+            textInputs[0].value = title
+            textInputs[1].value = pages
+            textInputs[2].value = author
+            textInputs[3].value = genre
+            textInputs[4].value = language
+
+            selectInputs[0].value = rating
+            selectInputs[1].value = format
+
+            haveReadInput.checked = readStatus
+        }
+    }
+    setTimeout(() => {
+        enterInputValues()
+    }, 200);
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        
+        const textInputs = document.querySelectorAll('form input[type="text"]')
+        const selectInputs = document.querySelectorAll('form select')
+        const haveReadInput = document.querySelector('form input[type="checkbox"]')
+        
         if(textInputs[0].value === '' || textInputs[1].value === '') {
             handleError('empty')
             return
@@ -41,20 +44,21 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
             textInputs[1].focus()
             return
         }
-
-        const book = new Book(textInputs[0].value, textInputs[1].value, selectInputs[0].value, textInputs[2].value, textInputs[3].value, textInputs[4].value, haveReadInput.checked, selectInputs[1].value)
         
-        const fetchData = async () => {
+        const book = new Book(textInputs[0].value, textInputs[1].value, selectInputs[0].value, textInputs[2].value, textInputs[3].value, textInputs[4].value, haveReadInput.checked, selectInputs[1].value)
+            
+        const editData = async () => {
             const APIURL = 'http://localhost:3001/'
+    
             try {
-                const addedBook = await fetch(APIURL, {
-                    method: 'POST',
+                const response = await fetch(APIURL + _id, {
+                    method: 'PATCH',
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(book)
                 })
-                console.log(addedBook.json())
+                console.log(response.json())
                 updateData()
                 return
             } catch (error) {
@@ -62,21 +66,24 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
                 return
             }
         }
-        fetchData()
-        
+        editData()
+
         textInputs.forEach(input => {
-            clearInputs(input)
+            input.value = ''
         })
-        setIsModalActive(!isModalActive)
+        setEditModeActive(!editModeActive)
+        return
     }
 
+    
     return (
         <>
             <div className={className}>
-                <Button className='absolute right-2 top-2 text-red hover:scale-105' onClick={() => { setIsModalActive(!isModalActive) }}>
+                <Button className='absolute right-2 top-2 text-red hover:scale-105' 
+                onClick={() => { setEditModeActive(!editModeActive) }}>
                     <span className="material-symbols-outlined">close</span>
                 </Button>
-                <h3 className="text-2xl mb-5 font-bold">New Book</h3>
+                <h3 className="text-2xl mb-5 font-bold">{editModeActive ? 'Edit Book' : 'New Book'}</h3>
                 <form className="flex flex-col" onSubmit={(e) => { handleSubmit(e) }}>
                     <div className="flex justify-between mb-3">
                         <label htmlFor="title">Title *</label>
