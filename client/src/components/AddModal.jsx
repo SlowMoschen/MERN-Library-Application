@@ -41,7 +41,16 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
             return
         }
         
-        const book = new Book(textInputs[0].value, textInputs[1].value, selectInputs[0].value, textInputs[2].value, textInputs[3].value, textInputs[4].value, haveReadInput.checked, selectInputs[1].value)
+        const book = new Book(
+        textInputs[0].value.trim().toLowerCase(), 
+        textInputs[1].value.trim().toLowerCase(), 
+        selectInputs[0].value.trim().toLowerCase(), 
+        textInputs[2].value.trim().toLowerCase(), 
+        textInputs[3].value.trim().toLowerCase(), 
+        textInputs[4].value.trim().toLowerCase(), 
+        haveReadInput.checked, 
+        selectInputs[1].value.trim().toLowerCase()
+        )
             
         const addData = async () => {
             const APIURL = 'http://localhost:3001/'

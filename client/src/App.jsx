@@ -70,7 +70,7 @@ return (
         return <BookCard 
                 book={book} 
                 key={index} 
-                className='flex flex-col items-center justify-start w-90 m-10 h-80 max-w-sm rounded-lg bg-secondary relative' 
+                className='flex flex-col items-center justify-start w-90 m-10 h-80 max-w-sm rounded-lg bg-secondary relative capitalize hover:shadow-md hover:scale-105' 
                 updateData={updateData}
                 editModeActive={editModeActive}
                 setEditModeActive={setEditModeActive}
@@ -86,7 +86,7 @@ return (
         </Button>
      </BookGrid> 
      : <Overview 
-     className='h-[90%] w-full p-2 grid grid-cols-2 grid-rows-1'
+     className='h-[100%] w-full p-2 grid grid-cols-2 grid-rows-1 items-center overflow-scroll overflow-x-hidden'
      allBooks={allBooks}
      />}
 

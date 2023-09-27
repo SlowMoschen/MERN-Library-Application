@@ -127,7 +127,7 @@ export default function EditModal({ className, editModeActive, setEditModeActive
                             <option value="E-book">E-Book</option>
                         </select>
                     </div>
-                    <Button className="bg-accent p-2 mt-2 rounded-lg hover:scale-105">Add to your Library</Button>
+                    <Button className="bg-accent p-2 mt-2 rounded-lg hover:scale-105 font-bold text-2xl">Save</Button>
                     <div className="error mt-3 text-center flex items-center justify-center w-full h-4 text-red"></div>
                 </form>
             </div>
