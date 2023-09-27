@@ -12,22 +12,40 @@ export default function Overview({ className, allBooks }) {
         }, 0)
     }
 
-    const langauge = (arr, property, searchTerms) => {
-        for(let i = 0; i < searchTerms.length; i++) {
-            return arr.filter((obj) => obj[property] === searchTerms[i]).length
-        }
-    }
-
     const sortedByPages = [...allBooks].sort((a, b) => a.pages - b.pages)
 
     const sumOfPages = calculateSum(allBooks, 'pages')
     const sumOfReadPages = calculateSum(readBooks, 'pages')
     const sumOfNotReadPages = calculateSum(unreadBooks, 'pages')
     const avgOfRatings = calculateSum(allBooks, 'rating') / allBooks.length
+
     
-    setTimeout(() => {
+    
+    const genres = allBooks.map(book => book.genre)
+    const filteredGenres = genres.filter((item, index) => genres.indexOf(item) === index).filter(item => item)
+
+    const genreLength = () => {
+
+        let counts = []
+
+        const getSum = (searchGenre) => {
+            const filteredBooks = allBooks.filter(book => book.genre === searchGenre)
+            return filteredBooks.length
+        }
+
+        for(const genre of filteredGenres) {
+            counts = [...counts, getSum(genre)]
+        }
+        return counts
+    }
+    genreLength()
+
+    const renderGraphs = () => {
         const pieGraph = document.querySelector('#pieGraph')
         const barGraph = document.querySelector('#barGraph')
+        const genreGraph = document.querySelector('#genreGraph')
+
+        // Pages Graph
         new Chart(pieGraph, {
             type: 'pie',
             data: {
@@ -38,8 +56,16 @@ export default function Overview({ className, allBooks }) {
                     borderWidth: 1
                 }]
             },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
         });
-
+        
+        // Books Bar Graph
         new Chart(barGraph, {
             type: 'bar',
             data: {
@@ -49,16 +75,57 @@ export default function Overview({ className, allBooks }) {
                     data: sortedByPages.map(book => book.pages),
                     borderWidth: 1
                 }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
         })
-    }, 300);
+
+        // Genre Graph
+        new Chart(genreGraph, {
+            type: 'bar',
+            data: {
+                labels: filteredGenres.map(genre => genre),
+                datasets: [{
+                    label: 'Genre',
+                    data: genreLength().map(count => count),
+                    borderWidth: 1,
+                    backgroundColor: 'rgba(255,99,132, 0.6)'
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        })
+    }
+    
+    setTimeout(renderGraphs, 100)
 
     return (
         <>
         { allBooks.length === 0 
         ? <div className='absolute top top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-primary p-5 rounded-lg text-xl'>Enter a book in your Library to see the Statistics.</div>
-        : <div className={className}>
-                <div className="w-full h-full flex flex-col items-center justify-center">
+        : (
+            <>
+                <div className="w-full h-full min-h-[20rem] flex flex-col items-center justify-center">
                 <h3 className="text-center text-2xl">Overview List</h3>
                 <table className="w-full border-accent border-2 max-w-[90%]">
                     <thead className="bg-secondary flex">
@@ -84,7 +151,7 @@ export default function Overview({ className, allBooks }) {
                     </tbody>
                 </table>
                 </div>
-                <div className="h-full w-full flex flex-col">
+                <div className="h-[70%] min-h-[20rem] w-full flex flex-col">
                 <h3 className="text-center text-2xl">Statistics</h3>
                 <div className="bg-secondary h-full w-full">
                     <p>Books in your Library: <span className="font-bold">{allBooks.length}</span></p>
@@ -94,23 +161,27 @@ export default function Overview({ className, allBooks }) {
                     <p>Book with the most Pages: <span className="font-bold">{sortedByPages[sortedByPages.length - 1].title}</span></p>
                 </div>
                 </div>
-                <div className="col-span-2 flex flex-col">
+                <div className="col-span-2 flex flex-col h-full">
                 <h3 className='text-center text-2xl'>Graphs</h3>
-                <div className='flex items-center justify-evenly'>
-                    <div className='w-1/4 h-[208px] text-center items-center flex flex-col'>
+                <div className='grid grid-cols-2 items-center'>
+                    <div className='w-full h-1/2 text-center items-center flex flex-col'>
                         <h3>have read/have not read</h3>
                         <canvas id='pieGraph'></canvas>
                     </div>
-                    <div className='h-full w-1/3 text-center'>
+                    <div className='h-full w-full text-center'>
                         <h3>Books by Pages</h3>
                         <canvas id='barGraph'></canvas>
                     </div>
+                    <div className='h-full w-full text-center'>
+                        <h3>Genres</h3>
+                        {filteredGenres.length === 0 ? <div>No Genres entered</div> : <canvas id='genreGraph'></canvas>}
+                    </div>
                 </div>
                 </div>
-            </div>
-    
+                <div className='h-40'></div>
+            </>
+        )
         }
-            
         </>
     )
 }

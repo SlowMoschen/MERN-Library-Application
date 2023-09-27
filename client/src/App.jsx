@@ -9,6 +9,7 @@ import Button from './components/Button'
 import AddModal from './components/AddModal'
 import BookCard from './components/BookCard'
 import EditModal from './components/EditModal'
+import OverviewGrid from './components/OverviewGrid'
 
 function App() {
 
@@ -38,6 +39,32 @@ function App() {
 useEffect(() => {
    updateData()
 }, [])
+
+  // const deleteAllBooks = () => {
+  //   const deleteFetch = async () => {
+  //     const APIURL = 'http://localhost:3001/'
+  //     try {
+  //       const respone = await fetch(APIURL, {
+  //         method: 'DELETE',
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         }
+  //       })
+  //       const data = respone.json()
+  //       console.log(data);
+  //       updateData()
+  //       return
+  //     } catch (error) {
+  //       console.error(error)
+  //       return
+  //     }
+  //   }
+  //   deleteFetch()
+  // }
+
+  // setInterval(() => {
+  //   deleteAllBooks()
+  // }, 86400000);
 
 return (
     <>
@@ -85,10 +112,13 @@ return (
           <span className="material-symbols-outlined">add</span>
         </Button>
      </BookGrid> 
-     : <Overview 
-     className='h-[100%] w-full p-2 grid grid-cols-2 grid-rows-1 items-center overflow-scroll overflow-x-hidden'
-     allBooks={allBooks}
-     />}
+     : <OverviewGrid className='h-[100%] w-full p-2 grid grid-cols-2 items-center overflow-scroll'>
+        <Overview 
+        allBooks={allBooks}
+        />
+        </OverviewGrid> 
+       }
+     
 
     </>
   )
