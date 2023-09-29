@@ -2,7 +2,7 @@ import Chart from 'chart.js/auto'
 
 export default function Overview({ allBooks }) {
 
-    // Functions to get Statistics
+    // Functions to calculate the Statistics
 
     // Calculates the Sum of an Property in an Array of Objects
     const calculateSum = (array, property) => {
@@ -32,6 +32,7 @@ export default function Overview({ allBooks }) {
     // Function to get the most Frequent Element from an Arry
     // Function takes an Array reduces it in an Object - a Key/Value Pair will be initilaized for every Item in the array - if it appears a second time it will add +1 to the count
     // The hashmap is an Object with the counts of the items - throught the .sort() method the highest counted Element will be returned
+    // thx to Bilge Demirkaya for the great explanation - https://plainenglish.io/blog/how-to-find-the-most-frequent-element-in-an-array-in-javascript-c85119dc78d2
     const getMostFrequentElement = arr => {
         if(arr.length === 0) return
         const hashmap = arr.reduce((obj, arrayItem) => {
@@ -85,13 +86,6 @@ export default function Overview({ allBooks }) {
                     data:[sumOfReadPages, sumOfNotReadPages],
                     borderWidth: 1
                 }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
             }
         });
         
@@ -160,7 +154,7 @@ export default function Overview({ allBooks }) {
         })
     }
     
-    // Timeout set to render the HTML Elements first befor rendering Graphs
+    // Timeout set to render the HTML Elements first before rendering Graphs
     setTimeout(renderGraphs, 100)
 
     return (
@@ -237,6 +231,7 @@ export default function Overview({ allBooks }) {
                     <h3 className='text-center text-2xl'>Graphs</h3>
                     <div className='grid grid-cols-2 items-center'>
                         <div className='w-full h-1/2 text-center items-center flex flex-col'>
+                            <h3 className='font-bold text-2xl'>Pages</h3>
                             <h3 className='font-bold text-xl mb-4'>have read/have not read</h3>
                             <canvas id='pieGraph'></canvas>
                         </div>

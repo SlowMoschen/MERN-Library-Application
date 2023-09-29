@@ -1,14 +1,12 @@
-import { useState } from "react";
 import Button from "./Button";
+import { APIURL } from "../constants";
 
-export default function BookCard({ className, book, updateData, editModeActive, setEditModeActive, setEditBook }) {
+export default function BookCard({ className, book, updateData, isModalActive, setIsModalActive, setIsEditModeActive, setEditBook }) {
     
     const { _id, title, pages, author, genre, language, rating, format, readStatus } = book
     
+    // Function to delete Book on Button click
     const deleteBook = async () => {
-
-        const APIURL = 'http://localhost:3001/'
-
         try {
             const response = await fetch(APIURL + _id, {
                 method: 'DELETE',
@@ -45,8 +43,9 @@ export default function BookCard({ className, book, updateData, editModeActive, 
                 <Button className="absolute bottom-0 right-12 hover:scale-105" onClick={() => { deleteBook() }}><span className="material-symbols-outlined">delete</span></Button>
                 <Button className="absolute bottom-0 right-3 hover:scale-105" 
                 onClick={() => { 
-                    setEditModeActive(!editModeActive) 
+                    setIsEditModeActive(true) 
                     setEditBook(book)
+                    setIsModalActive(!isModalActive)
                     }}>
                     <span className="material-symbols-outlined">edit</span>
                 </Button>

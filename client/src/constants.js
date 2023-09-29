@@ -1,4 +1,4 @@
-export default class Book {
+export class Book {
     constructor(title, pages, rating, author, genre, language, haveRead, format) {
         this.title = title,
         this.pages = pages,
@@ -10,3 +10,5 @@ export default class Book {
         this.format = format
     }
 }
+
+export const APIURL = 'http://localhost:3001/'

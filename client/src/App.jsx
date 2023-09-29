@@ -1,28 +1,28 @@
 import './App.css'
+import { APIURL } from './constants'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Logo from './assets/logo.png'
 import Navbar from './components/Navbar'
-import { useEffect, useState } from 'react'
 import BookGrid from './components/BookGrid'
 import Overview from './components/Overview'
 import Button from './components/Button'
-import AddModal from './components/AddModal'
+import FormModal from './components/FormModal'
 import BookCard from './components/BookCard'
-import EditModal from './components/EditModal'
 import OverviewGrid from './components/OverviewGrid'
 
 function App() {
 
   const [isLibraryActive, setIsLibraryActive] = useState(true)
   const [isModalActive, setIsModalActive] = useState(false)
-  const [editModeActive, setEditModeActive] = useState(false)
+  const [isEditModeActive, setIsEditModeActive] = useState(false)
   const [allBooks, setAllBooks] = useState([])
   const [editBook, setEditBook] = useState([])
 
+  // Main function to fetch all Book data
   const updateData = () => {
-    const fetchAllBooks = async () => {
-      const APIURL = 'http://localhost:3001/'
-  
+
+    const fetchAllBooks = async () => {  
       try {
         const response = await fetch(APIURL)
         const data = response.json()
@@ -34,37 +34,40 @@ function App() {
       }
     }
     fetchAllBooks()
+
   }
 
 useEffect(() => {
    updateData()
 }, [])
 
-  // const deleteAllBooks = () => {
-  //   const deleteFetch = async () => {
-  //     const APIURL = 'http://localhost:3001/'
-  //     try {
-  //       const respone = await fetch(APIURL, {
-  //         method: 'DELETE',
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         }
-  //       })
-  //       const data = respone.json()
-  //       console.log(data);
-  //       updateData()
-  //       return
-  //     } catch (error) {
-  //       console.error(error)
-  //       return
-  //     }
-  //   }
-  //   deleteFetch()
-  // }
-
-  // setInterval(() => {
-  //   deleteAllBooks()
-  // }, 86400000);
+  // function to delete all Book Data after 24H
+  const deleteAllBooks = () => {
+      
+    const deleteFetch = async () => {
+        try {
+          const respone = await fetch(APIURL, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          const data = respone.json()
+          console.log(data);
+          updateData()
+          return
+        } catch (error) {
+          console.error(error)
+          return
+        }
+      }
+      deleteFetch()
+      
+    }
+    // Interval to delete all Data after 24H
+    setInterval(() => {
+      deleteAllBooks()
+    }, 86400000);
 
 return (
     <>
@@ -76,20 +79,14 @@ return (
      {isLibraryActive 
      ? <BookGrid className='h-[90%] grid grid-cols-4 overflow-scroll overflow-x-hidden'>
         {isModalActive 
-        ? <AddModal className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-30 bg-secondary border-2 border-accent p-5 rounded-lg flex flex-col items-center' 
+        ? <FormModal className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-30 bg-secondary border-2 border-accent p-5 rounded-lg flex flex-col items-center' 
           isModalActive={isModalActive}  
           setIsModalActive={setIsModalActive}
           updateData={updateData}
-          /> 
-        : ''}
-        {editModeActive 
-        ? <EditModal
-          className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-30 bg-secondary border-2 border-accent p-5 rounded-lg flex flex-col items-center'
-          editModeActive={editModeActive}
-          setEditModeActive={setEditModeActive}
+          setIsEditModeActive={setIsEditModeActive}
+          isEditModeActive={isEditModeActive}
           editBook={editBook}
-          updateData={updateData}
-        />
+          /> 
         : ''}
         {allBooks.length === 0 
         ? <div className='absolute top top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-primary p-5 rounded-lg text-xl'>Add a Book by clicking the Button in the bottom right corner.</div> 
@@ -99,8 +96,8 @@ return (
                 key={index} 
                 className='flex flex-col items-center justify-start w-90 m-10 h-80 max-w-sm rounded-lg bg-secondary relative capitalize hover:shadow-md hover:scale-105' 
                 updateData={updateData}
-                editModeActive={editModeActive}
-                setEditModeActive={setEditModeActive}
+                isEditModeActive={isEditModeActive}
+                setIsEditModeActive={setIsEditModeActive}
                 isModalActive={isModalActive}
                 setIsModalActive={setIsModalActive}
                 editBook={editBook}

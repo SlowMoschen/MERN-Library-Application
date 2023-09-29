@@ -1,8 +1,37 @@
-import Book from "../BookClass";
+import { Book } from "../constants";
 import Button from "./Button";
 
-export default function BookModal({ className, isModalActive, setIsModalActive, updateData }) {
+export default function BookModal({ className, isModalActive, setIsModalActive, updateData, isEditModeActive, setIsEditModeActive, editBook }) {
 
+    const {_id, title, pages, author, language, readStatus, genre, rating, format } = editBook
+
+    // function to set Inputs to Book values if EditMode is on
+    const enterInputValues = () => {
+        const textInputs = document.querySelectorAll('form input[type="text"]')
+        const selectInputs = document.querySelectorAll('form select')
+        const haveReadInput = document.querySelector('form input[type="checkbox"]')
+
+        if(isEditModeActive) {
+            textInputs[0].value = title
+            textInputs[1].value = pages
+            textInputs[2].value = author
+            textInputs[3].value = genre
+            textInputs[4].value = language
+
+            selectInputs[0].value = rating
+            selectInputs[1].value = format
+
+            haveReadInput.checked = readStatus
+            return
+        }
+        return
+    }
+
+    setTimeout(() => {
+        enterInputValues()
+    }, 200);
+
+    // function to handle wrong Inputs
     const handleError = (state) => {
         const errorBox = document.querySelector('.error')
         
@@ -19,10 +48,12 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
         }, 1500);
     }
     
+    // function to clearInputs after Submit
     const clearInputs = (element) => {
         element.value = ''
     }
 
+    // Main function to Handle Form submit
     const handleSubmit = e => {
         e.preventDefault()
         
@@ -51,12 +82,15 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
         haveReadInput.checked, 
         selectInputs[1].value.trim().toLowerCase()
         )
-            
-        const addData = async () => {
-            const APIURL = 'http://localhost:3001/'
+        
+        // function to fetch data based on Editmode
+        const fetchData = async () => {
+
+            const APIURL = isEditModeActive ? `http://localhost:3001/${_id}` : 'http://localhost:3001/'
+
             try {
                 const addedBook = await fetch(APIURL, {
-                    method: 'POST',
+                    method: isEditModeActive ? 'PATCH' : 'POST',
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -70,12 +104,15 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
                 return
             }
         }
-        addData()
+        fetchData()
 
         
         textInputs.forEach(input => {
             clearInputs(input)
         })
+        if(isEditModeActive) {
+            setIsEditModeActive(false)
+        }
         setIsModalActive(!isModalActive)
     }
 
@@ -83,10 +120,13 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
         <>
             <div className={className}>
                 <Button className='absolute right-2 top-2 text-red hover:scale-105' 
-                onClick={() => { setIsModalActive(!isModalActive) }}>
+                onClick={() => { 
+                    setIsModalActive(!isModalActive) 
+                    setIsEditModeActive(false)
+                    }}>
                     <span className="material-symbols-outlined">close</span>
                 </Button>
-                <h3 className="text-2xl mb-5 font-bold">New Book</h3>
+            <h3 className="text-2xl mb-5 font-bold">{isEditModeActive ? 'Edit book' : 'New Book'}</h3>
                 <form className="flex flex-col" onSubmit={(e) => { handleSubmit(e) }}>
                     <div className="flex justify-between mb-3">
                         <label htmlFor="title">Title *</label>
@@ -125,12 +165,12 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
                     <div className="flex justify-between mb-3">
                         <label htmlFor="format">Format of the Book</label>
                         <select id="format" className="ml-5 outline-accent p-1">
-                            <option value="Hardcover">Hardcover</option>
-                            <option value="Paperback">Paperback</option>
-                            <option value="E-book">E-Book</option>
+                            <option value="hardcover">Hardcover</option>
+                            <option value="paperback">Paperback</option>
+                            <option value="e-book">E-Book</option>
                         </select>
                     </div>
-                    <Button className="bg-accent p-2 mt-2 rounded-lg hover:scale-105">Add to your Library</Button>
+                    <Button className="bg-accent p-2 mt-2 rounded-lg hover:scale-105">{isEditModeActive ? "Save" : "Add Book to Library"}</Button>
                     <div className="error mt-3 text-center flex items-center justify-center w-full h-4 text-red"></div>
                 </form>
             </div>
