@@ -86,7 +86,7 @@ export default function BookModal({ className, isModalActive, setIsModalActive, 
         // function to fetch data based on Editmode
         const fetchData = async () => {
 
-            const APIURL = isEditModeActive ? `https://creepy-teal-coat.cyclic.cloud/'${_id}` : 'https://creepy-teal-coat.cyclic.cloud/'
+            const APIURL = isEditModeActive ? //TODO: add your API URL here ${_id}` : add your API URL here'
 
             try {
                 const addedBook = await fetch(APIURL, {
