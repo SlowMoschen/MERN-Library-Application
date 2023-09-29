@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const express = require('express')
 const server = express()
+const cron = require('node-cron')
 
 const PORT = process.env.PORT || 3001
 
@@ -26,8 +27,12 @@ connection.once('open', () => {
     console.log('Successfully connected to Database')
 })
 
+// Logic to delete all MongoDB Documents every Night
+const deleteAllDocuments = require('./routes/routes')
+cron.schedule('0 0 1 * *', deleteAllDocuments)
+
 const APIRoute = require('./routes/routes')
 
 server.use('/', APIRoute)
 
-server.listen(PORT, () => { console.log(`Server can be accessed via http://localhost:${PORT}`) })
+server.listen(PORT, '0.0.0.0', () => { console.log(`Server can be accessed on PORT: ${PORT}`) })

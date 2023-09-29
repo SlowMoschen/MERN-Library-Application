@@ -1,3 +1,0 @@
-problems
-	responisve Layout missing
-	if make a typo, messes with Stats

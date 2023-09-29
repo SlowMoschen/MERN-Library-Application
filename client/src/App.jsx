@@ -41,34 +41,6 @@ useEffect(() => {
    updateData()
 }, [])
 
-  // function to delete all Book Data after 24H
-  const deleteAllBooks = () => {
-      
-    const deleteFetch = async () => {
-        try {
-          const respone = await fetch(APIURL, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          const data = respone.json()
-          console.log(data);
-          updateData()
-          return
-        } catch (error) {
-          console.error(error)
-          return
-        }
-      }
-      deleteFetch()
-      
-    }
-    // Interval to delete all Data after 24H
-    setInterval(() => {
-      deleteAllBooks()
-    }, 86400000);
-
 return (
     <>
      <Header className='bg-secondary flex items-center justify-between p-2 h-[10%] z-10 w-full'>

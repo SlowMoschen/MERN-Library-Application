@@ -53,14 +53,15 @@ APIRoute.delete('/:id', async (req, res) => {
     }
 })
 
-// DELETE - Route to delete all Entries - will be called every 24H - for Testcase to keep DB clean
-APIRoute.delete('/', async (req, res) => {
+// Function to delete all Documents - gets called every 24h
+const deleteAllDocuments = async () => {
     try {
         const deleteAllBooks = await Book.deleteMany({})
-        res.status(200).json(deleteAllBooks)
+        console.log("Deleted all Documents successfully");
     } catch (error) {
-        res.status(500).send({ ErrorMessage: error.message })
+        console.error(error)
     }
-})
+}
 
+module.exports = deleteAllDocuments
 module.exports = APIRoute

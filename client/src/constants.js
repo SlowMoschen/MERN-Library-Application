@@ -11,4 +11,4 @@ export class Book {
     }
 }
 
-export const APIURL = 'http://localhost:3001/'
+export const APIURL = 'https://creepy-teal-coat.cyclic.cloud/'
