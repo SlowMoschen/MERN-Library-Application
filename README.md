@@ -20,7 +20,7 @@ E - Express is used to build the API for managing data <br/>
 R - The Frontend is build with React <br/>
 N - NodeJs is used to run the Express API <br/>
 
-<a href="https://www.chartjs.org/">Chart.js</a> used to build the graphs in the Overview tab
+<a href="https://www.chartjs.org/" target="_blank">Chart.js</a> used to build the graphs in the Overview tab
 
 ### Prerequisites to host the App on your own Maschine
 
