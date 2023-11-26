@@ -1,7 +1,5 @@
 # MERN-Library-Application
 
-**!!CAUTION!!** Book entries will be deleted every 24h to keep Database clean **!!CAUTION!!**
-
 ## Application Description
 The developed application is a full-featured library management application that allows users to add, edit books and track statistics about their library. The main functions and features of the application are:
 
